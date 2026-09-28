@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestão de Eventos - Teste API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+    h2 { border-bottom: 2px solid #333; padding-bottom: 8px; }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 30px;
+      background: #f9f9f9;
+      padding: 15px;
+      border: 1px solid #ddd;
+    }
+    input { padding: 8px; font-size: 14px; }
+    button {
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { background-color: #0056b3; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #eee; }
+  </style>
+</head>
+<body>
+
+  <h2>Cadastrar Novo Evento (POST)</h2>
+  <form id="formEvento">
+    <input type="text" id="nome" placeholder="Nome do Evento" required>
+    <input type="text" id="local" placeholder="Local" required>
+    <input type="date" id="data" required>
+    <input type="number" id="capacidade" placeholder="Capacidade Máxima" required>
+    <button type="submit">Salvar Evento</button>
+  </form>
+
+  <h2>Lista de Eventos (GET)</h2>
+  <button type="button" onclick="carregarEventos()">Atualizar Lista</button>
+  
+  <table id="tabelaEventos">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Local</th>
+        <th>Data</th>
+        <th>Capacidade</th>
+      </tr>
+    </thead>
+    <tbody id="corpoTabela">
+      <!-- As linhas serão inseridas aqui via JavaScript -->
+    </tbody>
+  </table>
+
+  <script>
+    const API_URL = "http://localhost:8080/eventos";
+
+    // 1. Método GET ALL: Buscar eventos e montar a tabela
+    async function carregarEventos() {
+      try {
+        const resposta = await fetch(API_URL);
+        
+        if (!resposta.ok) {
+          throw new Error("Erro na requisição: " + resposta.status);
+        }
+
+        const eventos = await resposta.json();
+        const corpoTabela = document.getElementById("corpoTabela");
+        corpoTabela.innerHTML = ""; // Limpa a tabela antes de listar
+
+        if (eventos.length === 0) {
+          corpoTabela.innerHTML = "<tr><td colspan='5'>Nenhum evento cadastrado.</td></tr>";
+          return;
+        }
+
+        eventos.forEach(evento => {
+          const linha = document.createElement("tr");
+          linha.innerHTML = `
+            <td>${evento.id}</td>
+            <td>${evento.nome}</td>
+            <td>${evento.local}</td>
+            <td>${evento.data}</td>
+            <td>${evento.capacidadeMaxima}</td>
+          `;
+          corpoTabela.appendChild(linha);
+        });
+
+      } catch (erro) {
+        console.error("Falha ao buscar eventos:", erro);
+        alert("Erro ao conectar à API. Verifique se o backend está rodando!");
+      }
+    }
+
+    // 2. Método POST: Capturar os dados do formulário e enviar para a API
+    document.getElementById("formEvento").addEventListener("submit", async function(event) {
+      event.preventDefault(); // Impede o recarregamento padrão da página
+
+      const novoEvento = {
+        nome: document.getElementById("nome").value,
+        local: document.getElementById("local").value,
+        data: document.getElementById("data").value,
+        capacidadeMaxima: parseInt(document.getElementById("capacidade").value)
+      };
+
+      try {
+        const resposta = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(novoEvento)
+        });
+
+        if (resposta.ok) {
+          alert("Evento cadastrado com sucesso!");
+          document.getElementById("formEvento").reset(); // Limpa os campos
+          carregarEventos(); // Atualiza a tabela automaticamente
+        } else {
+          alert("Erro ao cadastrar evento. Status: " + resposta.status);
+        }
+
+      } catch (erro) {
+        console.error("Falha no envio:", erro);
+        alert("Erro de comunicação com o servidor.");
+      }
+    });
+
+    // Carrega os eventos logo ao abrir a página
+    carregarEventos();
+  </script>
+
+</body>
+</html>
