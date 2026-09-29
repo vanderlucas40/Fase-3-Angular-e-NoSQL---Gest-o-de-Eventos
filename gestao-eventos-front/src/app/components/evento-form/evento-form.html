@@ -1,0 +1,64 @@
+<div class="form-container">
+  <div class="form-header">
+    <a routerLink="/eventos" class="back-link">← Voltar para listagem</a>
+    <h2>{{ isEdicao ? 'Editar Evento' : 'Cadastrar Novo Evento' }}</h2>
+    <p class="subtitle">Preencha os campos abaixo para salvar as informações no banco de dados.</p>
+  </div>
+
+  <div class="form-card">
+    <form (ngSubmit)="salvar()">
+      <div class="form-group">
+        <label for="nome">Nome do Evento</label>
+        <input 
+          id="nome" 
+          type="text" 
+          [(ngModel)]="evento.nome" 
+          name="nome" 
+          placeholder="Ex: Workshop de Engenharia de Software" 
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="local">Local ou Plataforma</label>
+        <input 
+          id="local" 
+          type="text" 
+          [(ngModel)]="evento.local" 
+          name="local" 
+          placeholder="Ex: Auditório Central / Bloco A" 
+          required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="data">Data de Realização</label>
+          <input 
+            id="data" 
+            type="date" 
+            [(ngModel)]="evento.data" 
+            name="data" 
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="capacidade">Capacidade Máxima (Pessoas)</label>
+          <input 
+            id="capacidade" 
+            type="number" 
+            [(ngModel)]="evento.capacidadeMaxima" 
+            name="capacidadeMaxima" 
+            placeholder="Ex: 100" 
+            min="1"
+            required>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" routerLink="/eventos" class="btn-cancel">Cancelar</button>
+        <button type="submit" class="btn-submit">
+          {{ isEdicao ? 'Salvar Alterações' : 'Concluir Cadastro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

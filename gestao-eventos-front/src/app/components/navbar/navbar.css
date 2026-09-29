@@ -1,0 +1,89 @@
+.app-header {
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-box {
+  width: 36px;
+  height: 36px;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+}
+
+.brand-tag {
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #94a3b8;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.nav-menu a:hover {
+  color: #ffffff;
+}
+
+.nav-menu a.active {
+  color: #ffffff;
+  background-color: #1e293b;
+}
+
+.btn-new {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.btn-new:hover {
+  background-color: #1d4ed8 !important;
+}

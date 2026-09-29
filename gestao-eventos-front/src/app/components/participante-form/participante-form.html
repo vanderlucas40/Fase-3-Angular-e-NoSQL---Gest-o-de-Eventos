@@ -1,0 +1,54 @@
+<div class="form-container">
+  <div class="form-header">
+    <a routerLink="/participantes" class="back-link">← Voltar para participantes</a>
+    <h2>{{ isEdicao ? 'Editar Participante' : 'Novo Participante' }}</h2>
+    <p class="subtitle">Insira as informações cadastrais e selecione o evento de destino.</p>
+  </div>
+
+  <div class="form-card">
+    <form (ngSubmit)="salvar()">
+      <div class="form-group">
+        <label for="nome">Nome Completo</label>
+        <input 
+          id="nome" 
+          type="text" 
+          [(ngModel)]="participante.nome" 
+          name="nome" 
+          placeholder="Ex: Mariana Silva" 
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input 
+          id="email" 
+          type="email" 
+          [(ngModel)]="participante.email" 
+          name="email" 
+          placeholder="Ex: mariana.silva@email.com" 
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="eventoId">Evento de Interesse</label>
+        <select 
+          id="eventoId" 
+          [(ngModel)]="participante.eventoId" 
+          name="eventoId" 
+          required
+          style="width: 100%; padding: 10px 14px; font-size: 14px; border: 1px solid #e2e8f0; border-radius: 6px; background-color: #fff;">
+          <option *ngFor="let ev of eventosDisponiveis" [value]="ev.id">
+            {{ ev.nome }} ({{ ev.data }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" routerLink="/participantes" class="btn-cancel">Cancelar</button>
+        <button type="submit" class="btn-submit">
+          {{ isEdicao ? 'Salvar Alterações' : 'Concluir Inscrição' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

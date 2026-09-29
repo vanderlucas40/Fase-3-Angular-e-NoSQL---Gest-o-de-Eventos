@@ -1,0 +1,84 @@
+<div class="list-container">
+  <!-- Cabeçalho da Página -->
+  <div class="header-section">
+    <div>
+      <h2 class="title">Gerenciador de Eventos</h2>
+      <p class="description">Visualize a programação e controle as inscrições e capacidade dos eventos.</p>
+    </div>
+    <a routerLink="/eventos/novo" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Novo Evento
+    </a>
+  </div>
+
+  <!-- Métricas Rápidas -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-label">Eventos Registrados</span>
+      <div class="stat-value">{{ totalEventos() }}</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Capacidade Total Alocada</span>
+      <div class="stat-value">{{ totalCapacidade() }} <span class="stat-unit">vagas</span></div>
+    </div>
+  </div>
+
+  <!-- Tabela de Registros -->
+  <div class="table-card">
+    <div class="table-header">
+      <h3 class="table-title">Todos os Eventos</h3>
+      <span class="table-count">{{ totalEventos() }} {{ totalEventos() === 1 ? 'item' : 'itens' }}</span>
+    </div>
+
+    <!-- Tabela preenchida -->
+    <div class="table-responsive" *ngIf="eventos().length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 70px;">ID</th>
+            <th>Nome do Evento</th>
+            <th>Local</th>
+            <th>Data</th>
+            <th>Capacidade</th>
+            <th style="text-align: right; width: 140px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ev of eventos()">
+            <td class="id-col">#{{ ev.id }}</td>
+            <td class="name-col">{{ ev.nome }}</td>
+            <td class="loc-col">{{ ev.local }}</td>
+            <td class="date-col">{{ ev.data }}</td>
+            <td>
+              <span class="pill-badge">{{ ev.capacidadeMaxima }} vagas</span>
+            </td>
+            <td style="text-align: right;">
+              <div class="action-buttons">
+                <a [routerLink]="['/eventos/editar', ev.id]" class="btn-icon edit" title="Editar">
+                  Editar
+                </a>
+                <button (click)="deletar(ev.id)" class="btn-icon delete" title="Excluir">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="eventos().length === 0">
+      <div class="empty-icon-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h4>Nenhum evento encontrado</h4>
+      <p>Ainda não há registros cadastrados na base de dados.</p>
+      <a routerLink="/eventos/novo" class="btn-secondary">Cadastrar Primeiro Evento</a>
+    </div>
+  </div>
+</div>

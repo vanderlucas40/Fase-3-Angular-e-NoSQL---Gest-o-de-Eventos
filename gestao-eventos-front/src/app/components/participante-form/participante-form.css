@@ -1,0 +1,15 @@
+.form-container { max-width: 580px; margin: 0 auto; }
+.form-header { margin-bottom: 20px; }
+.back-link { font-size: 13px; font-weight: 500; color: #64748b; text-decoration: none; display: inline-block; margin-bottom: 10px; }
+.back-link:hover { color: #2563eb; }
+.form-header h2 { font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px; }
+.subtitle { font-size: 14px; color: #64748b; margin-top: 4px; }
+.form-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); padding: 28px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; }
+.form-group input { width: 100%; padding: 10px 14px; font-size: 14px; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 6px; background-color: #ffffff; outline: none; }
+.form-group input:focus, select:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+.form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; padding-top: 18px; border-top: 1px solid #f1f5f9; }
+.btn-cancel { background: #ffffff; color: #64748b; border: 1px solid #e2e8f0; padding: 9px 18px; font-size: 14px; font-weight: 500; border-radius: 6px; cursor: pointer; }
+.btn-submit { background: #2563eb; color: white; border: none; padding: 9px 20px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; }
+.btn-submit:hover { background-color: #1d4ed8; }
