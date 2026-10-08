@@ -16,7 +16,7 @@ export class ParticipanteService {
     return this.http.get<Participante[]>(this.API_URL);
   }
 
-  buscarPorId(id: number): Observable<Participante> {
+  buscarPorId(id: string | number): Observable<Participante> {
     return this.http.get<Participante>(`${this.API_URL}/${id}`);
   }
 
@@ -24,11 +24,11 @@ export class ParticipanteService {
     return this.http.post<Participante>(this.API_URL, participante);
   }
 
-  atualizar(id: number, participante: Participante): Observable<Participante> {
+  atualizar(id: string | number, participante: Participante): Observable<Participante> {
     return this.http.put<Participante>(`${this.API_URL}/${id}`, participante);
   }
 
-  excluir(id: number): Observable<void> {
+  excluir(id: string | number): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 }

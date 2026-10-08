@@ -19,12 +19,12 @@ export class ParticipanteFormComponent implements OnInit {
   participante: Participante = {
     nome: '',
     email: '',
-    eventoId: 0
+    eventoId: ''
   };
 
   eventosDisponiveis: Evento[] = [];
   isEdicao: boolean = false;
-  id?: number;
+  id?: string;
 
   constructor(
     private service: ParticipanteService,
@@ -35,28 +35,44 @@ export class ParticipanteFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // 1. Carrega os eventos para preencher as opções do <select>
+    // 1. Carrega a lista de eventos para popular o select
     this.eventoService.listarTodos().subscribe({
       next: (eventos) => {
         this.eventosDisponiveis = eventos;
-        if (this.eventosDisponiveis.length > 0 && !this.participante.eventoId) {
-          this.participante.eventoId = this.eventosDisponiveis[0].id!;
+
+        // Se veio evento pré-selecionado na query string (?eventoId=...)
+        const queryEventoId = this.route.snapshot.queryParamMap.get('eventoId');
+        if (queryEventoId) {
+          this.participante.eventoId = queryEventoId;
+        } else if (this.eventosDisponiveis.length > 0 && !this.participante.eventoId) {
+          this.participante.eventoId = (this.eventosDisponiveis[0].id ?? this.eventosDisponiveis[0]._id)?.toString();
         }
 
-        // 2. Se for edição, carrega os dados do participante
+        // 2. Verifica se a rota é de edição (/participantes/editar/:id)
         const idParam = this.route.snapshot.paramMap.get('id');
-        if (idParam) {
+        
+        // Garante que só busca no backend se o ID existir e NÃO for nulo, indefinido ou 'NaN'
+        if (idParam && idParam !== 'NaN' && idParam !== 'novo') {
           this.isEdicao = true;
-          this.id = Number(idParam);
+          this.id = idParam;
+
           this.service.buscarPorId(this.id).subscribe({
             next: (dados) => {
               this.participante = dados;
               this.cdr.detectChanges();
+            },
+            error: (err) => {
+              console.error('Erro ao buscar dados do participante:', err);
+              this.cdr.detectChanges();
             }
           });
         } else {
+          this.isEdicao = false;
           this.cdr.detectChanges();
         }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar eventos:', err);
       }
     });
   }

@@ -17,15 +17,13 @@ public class ParticipanteController {
     @Autowired
     private ParticipanteService service;
 
-    // GET ALL
     @GetMapping
     public ResponseEntity<List<Participante>> getAll() {
         return ResponseEntity.ok(service.listarTodos());
     }
 
-    // GET BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<Participante> getById(@PathVariable Long id) {
+    public ResponseEntity<Participante> getById(@PathVariable String id) {
         Participante participante = service.buscarPorId(id);
         if (participante != null) {
             return ResponseEntity.ok(participante);
@@ -33,16 +31,14 @@ public class ParticipanteController {
         return ResponseEntity.notFound().build();
     }
 
-    // POST
     @PostMapping
     public ResponseEntity<Participante> post(@RequestBody Participante participante) {
         Participante novo = service.salvar(participante);
         return ResponseEntity.status(HttpStatus.CREATED).body(novo);
     }
 
-    // PUT
     @PutMapping("/{id}")
-    public ResponseEntity<Participante> put(@PathVariable Long id, @RequestBody Participante participante) {
+    public ResponseEntity<Participante> put(@PathVariable String id, @RequestBody Participante participante) {
         Participante atualizado = service.atualizar(id, participante);
         if (atualizado != null) {
             return ResponseEntity.ok(atualizado);
@@ -50,9 +46,8 @@ public class ParticipanteController {
         return ResponseEntity.notFound().build();
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         if (service.deletar(id)) {
             return ResponseEntity.noContent().build();
         }

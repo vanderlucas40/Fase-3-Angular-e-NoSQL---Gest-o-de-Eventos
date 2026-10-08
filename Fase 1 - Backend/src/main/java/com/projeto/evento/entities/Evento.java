@@ -1,46 +1,68 @@
 package com.projeto.evento.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import java.util.List;
 
-@Entity
-@Table(name = "tb_eventos")
+@Document(collection = "eventos")
 public class Evento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String nome;
+    private String id;
+
+    // Campos do MongoDB
+    private String titulo;
+    private String categoria;
+    private Integer capacidade;
+    private Double precoIngresso;
+    private List<String> tags;
+    private Boolean ativo;
+    private Object dataEvento; // Object aceita Date, String ou Timestamp sem dar erro 500
+    private String descricao;
+
+    // Campos adicionais de compatibilidade com a Fase 2 (não circulares)
     private String local;
-    private LocalDate data;
-    private Integer capacidadeMaxima;
 
     public Evento() {}
 
-    public Evento(Long id, String nome, String local, LocalDate data, Integer capacidadeMaxima) {
-        this.id = id;
-        this.nome = nome;
-        this.local = local;
-        this.data = data;
-        this.capacidadeMaxima = capacidadeMaxima;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    // Compatibilidade com o front da Fase 2 (retorna titulo se nome for nulo)
+    public String getNome() { return titulo; }
+    public void setNome(String nome) { this.titulo = nome; }
+
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
+
+    public Integer getCapacidade() { return capacidade; }
+    public void setCapacidade(Integer capacidade) { this.capacidade = capacidade; }
+
+    public Integer getCapacidadeMaxima() { return capacidade; }
+    public void setCapacidadeMaxima(Integer capacidadeMaxima) { this.capacidade = capacidadeMaxima; }
+
+    public Double getPrecoIngresso() { return precoIngresso; }
+    public void setPrecoIngresso(Double precoIngresso) { this.precoIngresso = precoIngresso; }
+
+    public List<String> getTags() { return tags; }
+    public void setTags(List<String> tags) { this.tags = tags; }
+
+    public Boolean getAtivo() { return ativo; }
+    public void setAtivo(Boolean ativo) { this.ativo = ativo; }
+
+    public Object getDataEvento() { return dataEvento; }
+    public void setDataEvento(Object dataEvento) { this.dataEvento = dataEvento; }
+
+    public Object getData() { return dataEvento; }
+    public void setData(Object data) { this.dataEvento = data; }
 
     public String getLocal() { return local; }
     public void setLocal(String local) { this.local = local; }
 
-    public LocalDate getData() { return data; }
-    public void setData(LocalDate data) { this.data = data; }
-
-    public Integer getCapacidadeMaxima() { return capacidadeMaxima; }
-    public void setCapacidadeMaxima(Integer capacidadeMaxima) { this.capacidadeMaxima = capacidadeMaxima; }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 }

@@ -1,61 +1,94 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd, RouterLink } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { Evento } from '../../models/evento.model';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { EventoService } from '../../services/evento.service';
+import { Evento } from '../../models/evento.model';
 
 @Component({
   selector: 'app-evento-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './evento-list.html',
-  styleUrl: './evento-list.css'
+  styleUrls: ['./evento-list.css']
 })
 export class EventoListComponent implements OnInit {
+  eventos: Evento[] = [];
+  carregando: boolean = false;
+  mensagemErro: string = '';
 
-  // Signals nativos do Angular
-  eventos = signal<Evento[]>([]);
-  totalEventos = computed(() => this.eventos().length);
-  totalCapacidade = computed(() => 
-    this.eventos().reduce((acc, ev) => acc + (Number(ev.capacidadeMaxima) || 0), 0)
-  );
+  precoMinimo: number | null = null;
+  precoMaximo: number | null = null;
 
   constructor(
-    private service: EventoService,
-    private router: Router
-  ) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.carregarEventos();
-    });
-  }
+    private eventoService: EventoService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.carregarEventos();
   }
 
   carregarEventos(): void {
-    this.service.listarTodos().subscribe({
+    this.carregando = true;
+    this.mensagemErro = '';
+    
+    this.eventoService.listar().subscribe({
       next: (dados) => {
-        // Ao atualizar o Signal com .set(), o Angular atualiza TODOS os lugares da tela instantaneamente!
-        this.eventos.set(dados);
+        console.log('Eventos recebidos do backend:', dados);
+        this.eventos = dados || [];
+        this.carregando = false;
+        this.cdr.detectChanges(); // Força a atualização do ecrã
       },
-      error: () => alert('Erro ao buscar eventos da API!')
+      error: (erro) => {
+        console.error('Erro ao buscar eventos:', erro);
+        this.mensagemErro = 'Não foi possível carregar os eventos do servidor.';
+        this.carregando = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
-  deletar(id?: number): void {
+  aplicarFiltroPreco(): void {
+    if (this.precoMinimo === null || this.precoMaximo === null) {
+      alert('Informe o valor mínimo e máximo.');
+      return;
+    }
+
+    this.carregando = true;
+    this.eventoService.filtrarPorFaixaPreco(this.precoMinimo, this.precoMaximo).subscribe({
+      next: (dados) => {
+        this.eventos = dados || [];
+        this.carregando = false;
+        this.cdr.detectChanges();
+      },
+      error: (erro) => {
+        console.error('Erro ao filtrar eventos:', erro);
+        this.carregando = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  limparFiltros(): void {
+    this.precoMinimo = null;
+    this.precoMaximo = null;
+    this.carregarEventos();
+  }
+
+  excluirEvento(id?: string | number): void {
     if (!id) return;
 
-    if (confirm('Deseja realmente excluir este evento?')) {
-      this.service.excluir(id).subscribe({
+    if (confirm('Deseja realmente remover este evento?')) {
+      this.eventoService.remover(id).subscribe({
         next: () => {
-          alert('Evento removido com sucesso!');
-          this.carregarEventos();
+          this.eventos = this.eventos.filter(e => (e.id ?? e._id) !== id);
+          this.cdr.detectChanges();
         },
-        error: () => alert('Erro ao excluir evento.')
+        error: (erro) => {
+          console.error('Erro ao excluir evento:', erro);
+          alert('Erro ao excluir o evento.');
+        }
       });
     }
   }

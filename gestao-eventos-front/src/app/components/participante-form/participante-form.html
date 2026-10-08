@@ -37,8 +37,9 @@
           name="eventoId" 
           required
           style="width: 100%; padding: 10px 14px; font-size: 14px; border: 1px solid #e2e8f0; border-radius: 6px; background-color: #fff;">
-          <option *ngFor="let ev of eventosDisponiveis" [value]="ev.id">
-            {{ ev.nome }} ({{ ev.data }})
+          <option value="" disabled>Selecione um evento</option>
+          <option *ngFor="let ev of eventosDisponiveis" [value]="ev.id ?? ev._id">
+            {{ ev.titulo || ev.nome }}
           </option>
         </select>
       </div>

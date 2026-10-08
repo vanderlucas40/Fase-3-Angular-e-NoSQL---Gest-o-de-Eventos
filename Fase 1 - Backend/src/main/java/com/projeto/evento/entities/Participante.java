@@ -1,33 +1,32 @@
 package com.projeto.evento.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.List;
 
-@Entity
-@Table(name = "tb_participantes")
+@Document(collection = "participantes")
 public class Participante {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String nome;
     private String email;
-    private Long eventoId; // Referência direta simples pensando na integração com o Front
+
+    // Fase 2
+    private String eventoId;
+
+    // Fase 3 (NoSQL)
+    private Integer idade;
+    private String cidade;
+    private Boolean ingressoVip;
+    private String statusInscricao; // 'CONFIRMADO', 'PENDENTE', 'CANCELADO'
+    private List<String> eventosInscritos;
+    private String telefone; // Opcional ($exists)
 
     public Participante() {}
 
-    public Participante(Long id, String nome, String email, Long eventoId) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.eventoId = eventoId;
-    }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
@@ -35,6 +34,24 @@ public class Participante {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public Long getEventoId() { return eventoId; }
-    public void setEventoId(Long eventoId) { this.eventoId = eventoId; }
+    public String getEventoId() { return eventoId; }
+    public void setEventoId(String eventoId) { this.eventoId = eventoId; }
+
+    public Integer getIdade() { return idade; }
+    public void setIdade(Integer idade) { this.idade = idade; }
+
+    public String getCidade() { return cidade; }
+    public void setCidade(String cidade) { this.cidade = cidade; }
+
+    public Boolean getIngressoVip() { return ingressoVip; }
+    public void setIngressoVip(Boolean ingressoVip) { this.ingressoVip = ingressoVip; }
+
+    public String getStatusInscricao() { return statusInscricao; }
+    public void setStatusInscricao(String statusInscricao) { this.statusInscricao = statusInscricao; }
+
+    public List<String> getEventosInscritos() { return eventosInscritos; }
+    public void setEventosInscritos(List<String> eventosInscritos) { this.eventosInscritos = eventosInscritos; }
+
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
 }

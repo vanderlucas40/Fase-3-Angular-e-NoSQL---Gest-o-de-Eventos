@@ -18,7 +18,7 @@ public class ParticipanteService {
         return repository.findAll();
     }
 
-    public Participante buscarPorId(Long id) {
+    public Participante buscarPorId(String id) {
         Optional<Participante> obj = repository.findById(id);
         return obj.orElse(null);
     }
@@ -27,18 +27,24 @@ public class ParticipanteService {
         return repository.save(participante);
     }
 
-    public Participante atualizar(Long id, Participante dadosNovos) {
-        Participante participanteExistente = buscarPorId(id);
-        if (participanteExistente != null) {
-            participanteExistente.setNome(dadosNovos.getNome());
-            participanteExistente.setEmail(dadosNovos.getEmail());
-            participanteExistente.setEventoId(dadosNovos.getEventoId());
-            return repository.save(participanteExistente);
+    public Participante atualizar(String id, Participante dadosNovos) {
+        Participante existente = buscarPorId(id);
+        if (existente != null) {
+            existente.setNome(dadosNovos.getNome());
+            existente.setEmail(dadosNovos.getEmail());
+            existente.setEventoId(dadosNovos.getEventoId());
+            existente.setIdade(dadosNovos.getIdade());
+            existente.setCidade(dadosNovos.getCidade());
+            existente.setIngressoVip(dadosNovos.getIngressoVip());
+            existente.setStatusInscricao(dadosNovos.getStatusInscricao());
+            existente.setEventosInscritos(dadosNovos.getEventosInscritos());
+            existente.setTelefone(dadosNovos.getTelefone());
+            return repository.save(existente);
         }
         return null;
     }
 
-    public boolean deletar(Long id) {
+    public boolean deletar(String id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
             return true;

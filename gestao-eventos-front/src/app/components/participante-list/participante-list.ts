@@ -18,7 +18,7 @@ export class ParticipanteListComponent implements OnInit {
 
   participantes = signal<Participante[]>([]);
   totalInscritos = computed(() => this.participantes().length);
-  eventosMap = signal<{ [key: number]: string }>({});
+  eventosMap = signal<Record<string | number, string>>({});
 
   constructor(
     private service: ParticipanteService,
@@ -39,9 +39,13 @@ export class ParticipanteListComponent implements OnInit {
   carregarDados(): void {
     this.eventoService.listarTodos().subscribe({
       next: (eventos: Evento[]) => {
-        const mapa: { [key: number]: string } = {};
+        const mapa: Record<string | number, string> = {};
         eventos.forEach(ev => {
-          if (ev.id) mapa[ev.id] = ev.nome;
+          const idChave = ev.id ?? ev._id;
+          const nomeValor = ev.nome ?? ev.titulo ?? 'Evento sem título';
+          if (idChave) {
+            mapa[idChave] = nomeValor;
+          }
         });
         this.eventosMap.set(mapa);
 
@@ -55,7 +59,7 @@ export class ParticipanteListComponent implements OnInit {
     });
   }
 
-  deletar(id?: number): void {
+  deletar(id?: any): void {
     if (!id) return;
 
     if (confirm('Deseja realmente remover este participante?')) {
@@ -69,7 +73,8 @@ export class ParticipanteListComponent implements OnInit {
     }
   }
 
-  getNomeEvento(eventoId: number): string {
+  getNomeEvento(eventoId?: any): string {
+    if (!eventoId) return 'Sem vínculo';
     return this.eventosMap()[eventoId] || `Evento #${eventoId}`;
   }
 }

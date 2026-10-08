@@ -17,15 +17,25 @@ public class EventoController {
     @Autowired
     private EventoService service;
 
-    // GET ALL
+    // GET ALL (com suporte opcional a filtros NoSQL $gt, $lt e $exists)
     @GetMapping
-    public ResponseEntity<List<Evento>> getAll() {
+    public ResponseEntity<List<Evento>> getAll(
+            @RequestParam(required = false) Double minPreco,
+            @RequestParam(required = false) Double maxPreco,
+            @RequestParam(required = false) Boolean comDescricao) {
+        
+        if (minPreco != null && maxPreco != null) {
+            return ResponseEntity.ok(service.buscarPorFaixaPreco(minPreco, maxPreco));
+        }
+        if (Boolean.TRUE.equals(comDescricao)) {
+            return ResponseEntity.ok(service.buscarComDescricao());
+        }
         return ResponseEntity.ok(service.listarTodos());
     }
 
-    // GET BY ID
+    // GET BY ID (String para compatibilidade com o ObjectId do Mongo)
     @GetMapping("/{id}")
-    public ResponseEntity<Evento> getById(@PathVariable Long id) {
+    public ResponseEntity<Evento> getById(@PathVariable String id) {
         Evento evento = service.buscarPorId(id);
         if (evento != null) {
             return ResponseEntity.ok(evento);
@@ -33,16 +43,16 @@ public class EventoController {
         return ResponseEntity.notFound().build();
     }
 
-    // POST
+    // POST (insertOne)
     @PostMapping
     public ResponseEntity<Evento> post(@RequestBody Evento evento) {
         Evento novo = service.salvar(evento);
         return ResponseEntity.status(HttpStatus.CREATED).body(novo);
     }
 
-    // PUT
+    // PUT (updateOne)
     @PutMapping("/{id}")
-    public ResponseEntity<Evento> put(@PathVariable Long id, @RequestBody Evento evento) {
+    public ResponseEntity<Evento> put(@PathVariable String id, @RequestBody Evento evento) {
         Evento atualizado = service.atualizar(id, evento);
         if (atualizado != null) {
             return ResponseEntity.ok(atualizado);
@@ -50,9 +60,9 @@ public class EventoController {
         return ResponseEntity.notFound().build();
     }
 
-    // DELETE
+    // DELETE (deleteOne)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         if (service.deletar(id)) {
             return ResponseEntity.noContent().build();
         }
